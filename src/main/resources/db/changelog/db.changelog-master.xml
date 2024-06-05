@@ -9,14 +9,44 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
 http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
 http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
     <changeSet id="1" author="AykutY">
-        <createTable tableName="price">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" primaryKeyName="price_pk" />
+        <createSequence sequenceName="seq_currency" cycle="false" minValue="1" startValue="1" incrementBy="1"/>
+    </changeSet>
+    <changeSet id="2" author="AykutY">
+        <createTable tableName="currency">
+            <column name="id" type="bigint" defaultValueComputed="nextval('seq_currency')">
+                <constraints primaryKey="true" primaryKeyName="currency_pk" unique="true" />
             </column>
-            <column name="price_name" type="varchar(150)">
+            <column name="currency_name" type="varchar(150)">
             </column>
-            <column name="price_value" type="DECIMAL(12, 2)">
+            <column name="currency_value" type="DECIMAL(12, 2)">
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="3" author="AykutY">
+        <createSequence sequenceName="seq_currency_changes" cycle="false" minValue="1" startValue="1" incrementBy="1"/>
+    </changeSet>
+    <changeSet id="4" author="AykutY">
+        <createTable tableName="currency_changes">
+            <column name="id" type="bigint" defaultValueComputed="nextval('seq_currency_changes')">
+                <constraints primaryKey="true" primaryKeyName="currency_changes_pk" unique="true" />
+            </column>
+            <column name="currency_name" type="varchar(150)">
+            </column>
+            <column name="currency_value" type="DECIMAL(12, 2)">
+            </column>
+            <column name="inserted_date" type="timestamp">
+            </column>
+            <column name="change_type" type="tinyint">
+            </column>
+            <column name="currency_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="currency_id"
+                                 baseTableName="currency_changes"
+                                 constraintName="fk_currency_changes_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="currency"/>
+    </changeSet>
+
 </databaseChangeLog>

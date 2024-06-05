@@ -1,8 +1,8 @@
 package com.web_socket.websocket_demo.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.web_socket.websocket_demo.model.entity.Price;
-import com.web_socket.websocket_demo.repository.PriceRepository;
+import com.web_socket.websocket_demo.model.entity.Currency;
+import com.web_socket.websocket_demo.repository.CurrencyRepository;
 import com.web_socket.websocket_demo.service.SocketService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,28 +19,24 @@ import java.util.List;
 @EnableScheduling
 public class SocketResource {
 
-    private final PriceRepository priceRepository;
+    private final CurrencyRepository currencyRepository;
     private final SocketService socketService;
     private SimpMessagingTemplate template;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public SocketResource(PriceRepository priceRepository, SocketService socketService) {
-        this.priceRepository = priceRepository;
+    public SocketResource(CurrencyRepository currencyRepository, SocketService socketService) {
+        this.currencyRepository = currencyRepository;
         this.socketService = socketService;
     }
 
     @MessageMapping("/hello")
     @SendTo("/topic/greetings")
-    public List<Price> currencies() throws Exception {
-        System.out.println("asd");
-        List<Price> prices = null;
-        //for (int i = 0; i < 10; i++) {
-            //Thread.sleep(5000); // simulated delay
-            prices = priceRepository.findAll();
-            String writeValueAsString = objectMapper.writeValueAsString(prices);
-            socketService.sendMessage("greetings", writeValueAsString);
-        //}
-        return prices;
+    public List<Currency> currencies() throws Exception {
+        List<Currency> currencies = null;
+        currencies = currencyRepository.findAll();
+        String writeValueAsString = objectMapper.writeValueAsString(currencies);
+        socketService.sendMessage("greetings", writeValueAsString);
+        return currencies;
     }
 
     /*@MessageMapping("/hello")

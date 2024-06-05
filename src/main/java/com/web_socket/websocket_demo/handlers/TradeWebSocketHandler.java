@@ -12,12 +12,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TradeWebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final List<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
-    //private PriceRepository priceRepository;
-
-    /*public TradeWebSocketHandler(PriceRepository priceRepository) {
-
-        this.priceRepository = priceRepository;
-    }*/
 
     public TradeWebSocketHandler() {
     }
